@@ -1,5 +1,6 @@
 export const DESKTOP_MIN_WIDTH = 1024;
 const IOS_DEVICE_RE = /iPad|iPhone|iPod/;
+const INSTALLED_DISPLAY_MODES = ['standalone', 'fullscreen'] as const;
 const IOS_OTHER_BROWSER_RE = /CriOS|FxiOS|EdgiOS|OPiOS/;
 
 interface IosNavigator extends Navigator {
@@ -7,7 +8,9 @@ interface IosNavigator extends Navigator {
 }
 
 export function isStandalone(win: Window): boolean {
-  const media = typeof win.matchMedia === 'function' && win.matchMedia('(display-mode: standalone)').matches;
+  const media =
+    typeof win.matchMedia === 'function' &&
+    INSTALLED_DISPLAY_MODES.some((mode) => win.matchMedia(`(display-mode: ${mode})`).matches);
   return media || (win.navigator as IosNavigator).standalone === true;
 }
 

@@ -6,6 +6,7 @@ export interface GameShellLabels {
   install: string;
   addToHome: string;
   notNow: string;
+  close?: string;
   tapShare: string;
   tapAdd: string;
   installBody: string;
@@ -16,6 +17,6 @@ export interface GameShellLabels {
   errorReported: string;
 }
 
-export type InstallLabels = Pick<GameShellLabels, 'install' | 'addToHome' | 'notNow' | 'tapShare' | 'tapAdd' | 'installBody'>;
+export type InstallLabels = Pick<GameShellLabels, 'install' | 'addToHome' | 'notNow' | 'close' | 'tapShare' | 'tapAdd' | 'installBody'>;
 
 export type CrashLabels = Pick<GameShellLabels, 'crashTitle' | 'crashBody' | 'reload' | 'copyDetails' | 'errorReported'>;

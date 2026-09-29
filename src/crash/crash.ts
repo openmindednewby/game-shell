@@ -26,6 +26,10 @@ function fromRejection(e: Event): CrashInfo {
   return { kind: CRASH_KIND.Rejection, message: String(reason) };
 }
 
+function isErrorEvent(e: Event): e is ErrorEvent {
+  return typeof (e as Partial<ErrorEvent>).message === 'string';
+}
+
 function safeReport(opts: CrashOptions, info: CrashInfo): string | undefined {
   try {
     return opts.report?.(info) ?? undefined;
@@ -67,7 +71,7 @@ export function startCrash(opts: CrashOptions): Disposable {
     view.reload.focus();
   };
   const onError = (e: Event): void => {
-    if (e instanceof ErrorEvent) {
+    if (isErrorEvent(e)) {
       handle(fromErrorEvent(e));
     }
   };

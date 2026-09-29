@@ -1,10 +1,10 @@
 import { button, el } from '../dom';
 import type { CrashLabels } from '../types';
 
-export const CRASH_TITLE_ID = 'gs-crash-title';
+const CRASH_TITLE_ID = 'gs-crash-title';
 const CRASH_BODY_ID = 'gs-crash-body';
 
-export interface CrashOverlayProps {
+interface CrashOverlayProps {
   doc: Document;
   labels: CrashLabels;
   reference?: string;
@@ -12,7 +12,7 @@ export interface CrashOverlayProps {
   onCopy(): void;
 }
 
-export interface CrashOverlayView {
+interface CrashOverlayView {
   root: HTMLElement;
   reload: HTMLButtonElement;
 }

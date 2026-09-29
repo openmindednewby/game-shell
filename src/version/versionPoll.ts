@@ -14,22 +14,32 @@ export function startVersionPoll(opts: VersionPollOptions): Disposable {
   let baseline: string | null = null;
   let fired = false;
   let busy = false;
+  let disposed = false;
+  let timer = 0;
+  const stop = (): void => {
+    win.clearInterval(timer);
+    win.document.removeEventListener('visibilitychange', onVisibility);
+  };
 
   const check = async (): Promise<void> => {
-    if (fired || busy) {
+    if (fired || busy || disposed) {
       return;
     }
     busy = true;
     try {
       const res = await fetchFn(opts.url, { cache: 'no-store' });
-      if (!res.ok) {
+      if (!res.ok || disposed) {
         return;
       }
       const value = (await res.text()).trim();
+      if (disposed) {
+        return;
+      }
       if (baseline === null) {
         baseline = value;
       } else if (value !== baseline) {
         fired = true;
+        stop();
         opts.onNewVersion();
       }
     } catch {
@@ -38,19 +48,19 @@ export function startVersionPoll(opts: VersionPollOptions): Disposable {
       busy = false;
     }
   };
-  const onVisibility = (): void => {
+  function onVisibility(): void {
     if (win.document.visibilityState === 'visible') {
       void check();
     }
-  };
+  }
 
   void check();
-  const timer = win.setInterval(() => void check(), opts.intervalMs);
+  timer = win.setInterval(() => void check(), opts.intervalMs);
   win.document.addEventListener('visibilitychange', onVisibility);
   return {
     dispose: (): void => {
-      win.clearInterval(timer);
-      win.document.removeEventListener('visibilitychange', onVisibility);
+      disposed = true;
+      stop();
     },
   };
 }

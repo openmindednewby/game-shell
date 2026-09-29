@@ -20,20 +20,21 @@ export interface GameShellOptions {
 
 export function initGameShell(opts: GameShellOptions): Disposable {
   const doc = opts.root.ownerDocument;
+  const win = doc.defaultView ?? window;
   injectStyles(doc);
   opts.root.classList.add('gs-root');
-  const parts: Disposable[] = [startFit()];
+  const parts: Disposable[] = [startFit(win)];
   if (opts.install !== false) {
-    parts.push(startInstall({ appName: opts.appName, labels: opts.labels, ...opts.install }));
+    parts.push(startInstall({ appName: opts.appName, labels: opts.labels, ...opts.install, win }));
   }
   if (opts.crash !== false) {
-    parts.push(startCrash({ labels: opts.labels, report: opts.crash?.report, appVersion: opts.appVersion }));
+    parts.push(startCrash({ labels: opts.labels, report: opts.crash?.report, appVersion: opts.appVersion, win }));
   }
   if (opts.lifecycle) {
     parts.push(startLifecycle(opts.lifecycle, doc));
   }
   if (opts.version) {
-    parts.push(startVersionPoll(opts.version));
+    parts.push(startVersionPoll({ ...opts.version, win }));
   }
   return {
     dispose: (): void => {

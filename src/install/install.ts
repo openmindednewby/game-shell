@@ -30,16 +30,18 @@ interface InstallState {
 
 function createController(opts: InstallOptions, win: Window, now: () => number): {
   state: InstallState;
+  isDismissed(): boolean;
   mount(): void;
   unmount(): void;
 } {
   const key = snoozeKey(opts.appName, opts.storageKey);
   const state: InstallState = { deferred: null, variant: null, node: null };
+  let dismissed = false;
   const unmount = (): void => {
     state.node?.remove();
     state.node = null;
   };
-  const dismiss = (): void => {
+  const snooze = (): void => {
     writeSnooze(win, key, now());
     unmount();
   };
@@ -56,7 +58,7 @@ function createController(opts: InstallOptions, win: Window, now: () => number):
         unmount();
         return;
       }
-      dismiss();
+      snooze();
     } catch {
       unmount();
     }
@@ -73,11 +75,14 @@ function createController(opts: InstallOptions, win: Window, now: () => number):
       appName: opts.appName,
       labels: opts.labels,
       onInstall: () => void install(),
-      onDismiss: dismiss,
+      onDismiss: () => {
+        dismissed = true;
+        snooze();
+      },
     });
     win.document.body.append(state.node);
   };
-  return { state, mount, unmount };
+  return { state, isDismissed: (): boolean => dismissed, mount, unmount };
 }
 
 export function startInstall(opts: InstallOptions): Disposable {
@@ -92,7 +97,9 @@ export function startInstall(opts: InstallOptions): Disposable {
     e.preventDefault();
     ctl.state.deferred = e as BeforeInstallPromptEvent;
     ctl.state.variant = InstallVariant.Prompt;
-    ctl.mount();
+    if (!ctl.isDismissed()) {
+      ctl.mount();
+    }
   };
   const onInstalled = (): void => {
     ctl.state.variant = null;

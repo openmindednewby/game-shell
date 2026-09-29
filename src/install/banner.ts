@@ -4,9 +4,9 @@ import type { InstallLabels } from '../types';
 import { BannerLayout } from './BannerLayout';
 import { InstallVariant } from './InstallVariant';
 
-export const STEPS_ID = 'gs-install-steps';
+const STEPS_ID = 'gs-install-steps';
 
-export interface BannerProps {
+interface BannerProps {
   doc: Document;
   layout: BannerLayout;
   variant: InstallVariant;
@@ -27,8 +27,8 @@ function renderSteps(p: BannerProps): HTMLOListElement {
   return list;
 }
 
-function closeButton(p: BannerProps): HTMLButtonElement {
-  return button(p.doc, { className: 'gs-x', ariaLabel: p.labels.notNow, icon: ICONS.close, onClick: p.onDismiss });
+function closeButton(p: BannerProps, ariaLabel: string = p.labels.notNow): HTMLButtonElement {
+  return button(p.doc, { className: 'gs-x', ariaLabel, icon: ICONS.close, onClick: p.onDismiss });
 }
 
 function renderChip(p: BannerProps): HTMLElement[] {
@@ -66,7 +66,7 @@ function renderCard(p: BannerProps): HTMLElement[] {
     acts.append(button(p.doc, { className: 'gs-btn gs-primary', text: p.labels.install, icon: ICONS.download, onClick: p.onInstall }));
   }
   acts.append(button(p.doc, { className: 'gs-btn gs-ghost', text: p.labels.notNow, onClick: p.onDismiss }));
-  card.append(closeButton(p), app, txt);
+  card.append(closeButton(p, p.labels.close ?? p.labels.notNow), app, txt);
   if (p.variant === InstallVariant.Ios) {
     card.append(renderSteps(p));
   }
@@ -82,6 +82,7 @@ export function renderBanner(p: BannerProps): HTMLElement {
   wrap.setAttribute('aria-label', p.variant === InstallVariant.Prompt ? p.labels.install : p.labels.addToHome);
   wrap.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      e.stopPropagation();
       p.onDismiss();
     }
   });

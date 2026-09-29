@@ -20,7 +20,7 @@ export function iconSpan(doc: Document, svg: string): HTMLSpanElement {
   return span;
 }
 
-export interface ButtonSpec {
+interface ButtonSpec {
   className: string;
   text?: string;
   ariaLabel?: string;

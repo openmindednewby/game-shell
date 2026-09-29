@@ -61,6 +61,7 @@ export function startFit(win: Window = window): Disposable {
   return {
     dispose: (): void => {
       disposed = true;
+      root.style.removeProperty(GS_VH_VAR);
       vv?.removeEventListener('resize', onChange);
       win.removeEventListener('resize', onChange);
       win.removeEventListener('orientationchange', onChange);

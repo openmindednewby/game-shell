@@ -1,6 +1,6 @@
 {
   "name": "@dloizides/game-shell",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Framework-free web game shell: fits the visible viewport (--gs-vh), offers install (chip / card / iOS steps), shows a crash overlay, pauses on hide, unlocks audio, polls for new versions. ESM + CJS + IIFE (global GameShell) + game-shell.css. Zero runtime deps.",
   "keywords": [
     "game",

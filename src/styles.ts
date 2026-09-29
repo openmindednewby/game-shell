@@ -1,6 +1,6 @@
 const STYLE_ID = 'gs-styles';
 
-const THEME = `:where(:root){--gs-font-display:system-ui,'Segoe UI',sans-serif;--gs-font-text:system-ui,'Segoe UI',sans-serif;--gs-surface:rgba(24,26,29,.95);--gs-surface-solid:#181a1d;--gs-edge:#41464d;--gs-ink:#f3f3f1;--gs-ink-dim:#b9bdc2;--gs-accent:#f3f3f1;--gs-on-accent:#181a1d;--gs-scrim:rgba(0,0,0,.72);--gs-radius:12px;--gs-radius-pill:12px;--gs-focus:#9cc2ff;--gs-safe-top:env(safe-area-inset-top,0px);--gs-safe-right:env(safe-area-inset-right,0px);--gs-safe-bottom:env(safe-area-inset-bottom,0px);--gs-safe-left:env(safe-area-inset-left,0px)}`;
+const THEME = `:where(:root){--gs-font-display:system-ui,'Segoe UI',sans-serif;--gs-font-text:system-ui,'Segoe UI',sans-serif;--gs-surface:rgba(24,26,29,.95);--gs-surface-solid:#181a1d;--gs-edge:#41464d;--gs-ink:#f3f3f1;--gs-ink-dim:#b9bdc2;--gs-accent:#f3f3f1;--gs-on-accent:#181a1d;--gs-scrim:rgba(0,0,0,.72);--gs-radius:12px;--gs-radius-pill:12px;--gs-focus:#9cc2ff;--gs-card-bottom:60px;--gs-safe-top:env(safe-area-inset-top,0px);--gs-safe-right:env(safe-area-inset-right,0px);--gs-safe-bottom:env(safe-area-inset-bottom,0px);--gs-safe-left:env(safe-area-inset-left,0px)}`;
 
 const ROOT = `.gs-root{width:100%;height:100vh;height:100dvh;height:var(--gs-vh,100dvh)}`;
 
@@ -19,7 +19,7 @@ const BASE = `.gs{font-family:var(--gs-font-text);color:var(--gs-ink);box-sizing
 .gs-txt span{display:block;font-size:14px;line-height:1.4;color:var(--gs-ink-dim);margin-top:3px}`;
 
 const INSTALL = `.gs-install{position:fixed;z-index:2147483000;top:calc(12px + var(--gs-safe-top));left:calc(12px + var(--gs-safe-left))}
-.gs-install[data-layout=card]{top:auto;left:auto;right:calc(24px + var(--gs-safe-right));bottom:calc(24px + var(--gs-safe-bottom))}
+.gs-install[data-layout=card]{top:auto;left:auto;right:calc(24px + var(--gs-safe-right));bottom:calc(var(--gs-card-bottom,60px) + var(--gs-safe-bottom))}
 .gs-seal{display:flex;align-items:center;background:var(--gs-surface);border:1px solid var(--gs-edge);border-radius:var(--gs-radius-pill)}
 .gs-chip{display:flex;align-items:center;gap:8px;padding:0 6px 0 14px;font:700 15px var(--gs-font-text);color:var(--gs-ink)}
 .gs-chip svg{color:var(--gs-accent)}

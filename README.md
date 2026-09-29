@@ -31,4 +31,4 @@ Unity / Godot / vanilla pages: load `dist/game-shell.iife.js` (global `GameShell
 ## Theme
 
 Every overlay reads only these CSS variables; defaults are a neutral dark theme. Set them on `:root` in the game:
-`--gs-font-display --gs-font-text --gs-surface --gs-surface-solid --gs-edge --gs-ink --gs-ink-dim --gs-accent --gs-on-accent --gs-scrim --gs-radius --gs-radius-pill --gs-focus`.
+`--gs-font-display --gs-font-text --gs-surface --gs-surface-solid --gs-edge --gs-ink --gs-ink-dim --gs-accent --gs-on-accent --gs-scrim --gs-radius --gs-radius-pill --gs-focus`, plus `--gs-card-bottom` (desktop card offset from the bottom, default 60px).

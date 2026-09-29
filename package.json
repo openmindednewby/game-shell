@@ -1,0 +1,50 @@
+{
+  "name": "@dloizides/game-shell",
+  "version": "0.0.0",
+  "description": "Framework-free web game shell: fits the visible viewport (--gs-vh), offers install (chip / card / iOS steps), shows a crash overlay, pauses on hide, unlocks audio, polls for new versions. ESM + CJS + IIFE (global GameShell) + game-shell.css. Zero runtime deps.",
+  "keywords": ["game", "pwa", "install-prompt", "viewport", "dvh", "crash-overlay", "web-game", "eisaipollis"],
+  "author": "dloizides",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/openmindednewby/game-shell.git" },
+  "homepage": "https://github.com/openmindednewby/game-shell#readme",
+  "bugs": { "url": "https://github.com/openmindednewby/game-shell/issues" },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": { "types": "./dist/index.d.mts", "default": "./dist/index.mjs" },
+      "require": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "default": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }
+    },
+    "./game-shell.css": "./dist/game-shell.css",
+    "./game-shell.iife.js": "./dist/game-shell.iife.js"
+  },
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "sideEffects": ["*.css"],
+  "engines": { "node": ">=18.0.0" },
+  "scripts": {
+    "build": "rimraf dist && tsup && node scripts/emit-css.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist",
+    "security:audit": "npm audit --audit-level=high",
+    "prepublishOnly": "npm run clean && npm run build && npm run test"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.19.32",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "rimraf": "^5.0.0",
+    "ts-jest": "^29.1.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  }
+}

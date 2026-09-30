@@ -35,6 +35,10 @@ game.events.on('menu', () => shell.setPlaying(false));
 
 One callback per page load: a second call while one is pending, or after one has run, is dropped. `version.onNewVersion` goes through it, and `@dloizides/pwa-sw`'s register snippet calls `(window.__gsWhenIdle || run)(reload)`, so a service-worker update waits too. Apps without the shell keep reloading at once. `startIdleGate({ win, maxWaitMs })` is the standalone gate.
 
+**One slot, so `version.onNewVersion` must reload.** The first `whenIdle` caller takes the page's only slot. If `onNewVersion` does anything other than reload (a toast, a log line), a later service-worker update is dropped and the page never reloads.
+
+**`dispose()` ends the gate.** A callback still waiting runs at once if the game is not playing; during play it is dropped, and because pwa-sw's own once-per-page guard is already spent, that reload does not come back until the next page load. After `dispose()`, `whenIdle` and `setPlaying` do nothing: no timer, no listener, no callback. `initGameShell`'s `dispose()` also deletes `window.__gsWhenIdle`, so from then on pwa-sw reloads at once, mid-play or not. Call `dispose()` only when the game is torn down for good.
+
 Unity / Godot / vanilla pages: load `dist/game-shell.iife.js` (global `GameShell`) and `dist/game-shell.css`.
 
 | Module | What it does |

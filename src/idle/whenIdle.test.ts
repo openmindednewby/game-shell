@@ -105,15 +105,37 @@ describe('startIdleGate', () => {
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it('dispose cancels a pending callback', () => {
+  it('dispose during play drops the waiting callback and leaves no timer behind', () => {
     const gate = startIdleGate({ win: window, maxWaitMs: MAX_WAIT_MS });
     gate.setPlaying(true);
     const fn = jest.fn();
     gate.whenIdle(fn);
     gate.dispose();
-    jest.advanceTimersByTime(MAX_WAIT_MS);
-    setVisibility('hidden');
-    gate.setPlaying(false);
+    expect(jest.getTimerCount()).toBe(0);
     expect(fn).not.toHaveBeenCalled();
+  });
+
+  it('after dispose, whenIdle during play arms no timer and no visibility listener', () => {
+    const add = jest.spyOn(document, 'addEventListener');
+    const gate = startIdleGate({ win: window, maxWaitMs: MAX_WAIT_MS });
+    gate.dispose();
+    gate.setPlaying(true);
+    const fn = jest.fn();
+    gate.whenIdle(fn);
+    expect(jest.getTimerCount()).toBe(0);
+    jest.advanceTimersByTime(MAX_WAIT_MS);
+    expect(add).not.toHaveBeenCalledWith('visibilitychange', expect.any(Function));
+    add.mockRestore();
+  });
+
+  it('after dispose, whenIdle and setPlaying never run a callback', () => {
+    const gate = startIdleGate({ win: window, maxWaitMs: MAX_WAIT_MS });
+    gate.dispose();
+    const idle = jest.fn();
+    gate.whenIdle(idle);
+    gate.setPlaying(true);
+    gate.setPlaying(false);
+    setVisibility('hidden');
+    expect(idle).not.toHaveBeenCalled();
   });
 });

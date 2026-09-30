@@ -22,6 +22,7 @@ export function startIdleGate(opts: IdleGateOptions): IdleGate {
   const maxWaitMs = opts.maxWaitMs ?? DEFAULT_IDLE_MAX_WAIT_MS;
   let playing = false;
   let used = false;
+  let disposed = false;
   let pending: (() => void) | null = null;
   let timer = 0;
 
@@ -49,7 +50,7 @@ export function startIdleGate(opts: IdleGateOptions): IdleGate {
   };
 
   const whenIdle = (fn: () => void): void => {
-    if (used) {
+    if (used || disposed) {
       return;
     }
     used = true;
@@ -61,6 +62,9 @@ export function startIdleGate(opts: IdleGateOptions): IdleGate {
     timer = win.setTimeout(onMaxWait, maxWaitMs);
   };
   const setPlaying = (next: boolean): void => {
+    if (disposed) {
+      return;
+    }
     playing = next;
     if (!next && pending) {
       flush();
@@ -69,9 +73,14 @@ export function startIdleGate(opts: IdleGateOptions): IdleGate {
   return {
     whenIdle,
     setPlaying,
+    // A callback still waiting at dispose runs if the player is not playing. During play it is
+    // dropped rather than reloading mid-run; a pwa-sw reload dropped this way is lost for the page.
     dispose: (): void => {
-      pending = null;
-      clear();
+      disposed = true;
+      if (playing) {
+        pending = null;
+      }
+      flush();
     },
   };
 }

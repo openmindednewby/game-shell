@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+
+- `IdleGate.dispose()` no longer leaks (PWA-RELOAD-1 "Updates never reload a game mid-play"): a waiting callback runs if the game is not playing and is dropped during play; afterwards `whenIdle` and `setPlaying` arm no timer, add no listener and run nothing. The README documents that `initGameShell`'s `dispose()` removes `window.__gsWhenIdle` (pwa-sw then reloads at once) and that `version.onNewVersion` must reload because it takes the page's one slot.
+
 ## 0.4.0
 
 - Reloads never interrupt play (PWA-RELOAD-1 "Updates never reload a game mid-play"). `initGameShell` installs `window.__gsWhenIdle(fn)` and exposes `handle.whenIdle(fn)`: `fn` runs at once outside play, else on the next `setPlaying(false)`, else after `idle.maxWaitMs` (default 30 min) on the next tab hide (at once if already hidden). One callback per page load; later calls are dropped. `version.onNewVersion` now goes through it. `startIdleGate`, `DEFAULT_IDLE_MAX_WAIT_MS`, `WHEN_IDLE_GLOBAL` and the `IdleGate` / `WhenIdle` / `WhenIdleWindow` types are exported. The IIFE build (`GameShell`) carries all of it.

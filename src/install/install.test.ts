@@ -54,7 +54,7 @@ afterEach(() => {
 });
 
 describe('install', () => {
-  it('AC-03 Android beforeinstallprompt shows the top-left chip, Install prompts, appinstalled removes it', async () => {
+  it('AC-03 Android beforeinstallprompt shows the top-left chip, Install prompts, a native dismiss keeps it hidden for the session, appinstalled removes it', async () => {
     handle = startInstall({ appName: APP, labels, now: () => T0 });
     expect(banner()).toBeNull();
 
@@ -66,7 +66,15 @@ describe('install', () => {
     buttonByText(labels.install)?.click();
     await flush();
     expect(fired.prompt).toHaveBeenCalledTimes(1);
+    expect(banner()).toBeNull();
+    expect(localStorage.getItem(KEY)).toBe(String(T0));
 
+    firePrompt();
+    expect(banner()).toBeNull();
+    handle.dispose();
+
+    localStorage.clear();
+    handle = startInstall({ appName: APP, labels, now: () => T0 });
     firePrompt();
     expect(banner()).not.toBeNull();
     window.dispatchEvent(new Event('appinstalled'));
@@ -110,13 +118,15 @@ describe('install', () => {
     jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new Error('QuotaExceededError');
     });
-    expect(() => {
-      handle = startInstall({ appName: APP, labels, now: () => T0 + DAY_MS });
-      firePrompt();
-    }).not.toThrow();
+    const uncaught = jest.fn();
+    window.addEventListener('error', uncaught);
+    handle = startInstall({ appName: APP, labels, now: () => T0 + DAY_MS });
+    firePrompt();
     expect(banner()).not.toBeNull();
-    expect(() => document.querySelector<HTMLButtonElement>('.gs-install .gs-x')?.click()).not.toThrow();
+    document.querySelector<HTMLButtonElement>('.gs-install .gs-x')?.click();
     expect(banner()).toBeNull();
+    window.removeEventListener('error', uncaught);
+    expect(uncaught).not.toHaveBeenCalled();
   });
 
   it('AC-06 iOS Safari shows Add to Home Screen chip and tapping opens the 2-step popover', () => {

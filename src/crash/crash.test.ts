@@ -78,7 +78,13 @@ describe('crash', () => {
     buttonByText(labels.copyDetails)?.click();
     expect(writeText).toHaveBeenCalledWith('boom\nhttps://game/app.js:12:7\n2026.09.30-abc123');
 
-    writeText.mockRejectedValueOnce(new Error('denied'));
-    await expect(Promise.resolve(buttonByText(labels.copyDetails)?.click())).resolves.toBeUndefined();
+    const rejected = Promise.reject(new Error('denied'));
+    const handled = jest.spyOn(rejected, 'catch');
+    writeText.mockReturnValueOnce(rejected);
+    buttonByText(labels.copyDetails)?.click();
+    expect(writeText).toHaveBeenCalledTimes(2);
+    expect(handled).toHaveBeenCalledTimes(1);
+    await expect(handled.mock.results[0]?.value).resolves.toBeUndefined();
+    expect(overlays()).toHaveLength(1);
   });
 });

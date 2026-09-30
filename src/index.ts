@@ -14,4 +14,4 @@ export type { LifecycleOptions, ResumableAudio } from './lifecycle/lifecycle';
 export { startVersionPoll } from './version/versionPoll';
 export type { VersionPollOptions } from './version/versionPoll';
 export { GAME_SHELL_CSS, injectStyles } from './styles';
-export type { Disposable, GameShellLabels, InstallLabels, CrashLabels } from './types';
+export type { Disposable, GameShellHandle, GameShellLabels, InstallLabels, CrashLabels } from './types';

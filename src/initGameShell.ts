@@ -4,7 +4,7 @@ import { startFit } from './fit/fit';
 import { startInstall } from './install/install';
 import { startLifecycle, type LifecycleOptions } from './lifecycle/lifecycle';
 import { injectStyles } from './styles';
-import type { Disposable, GameShellLabels } from './types';
+import type { Disposable, GameShellHandle, GameShellLabels } from './types';
 import { startVersionPoll } from './version/versionPoll';
 
 export interface GameShellOptions {
@@ -18,14 +18,15 @@ export interface GameShellOptions {
   lifecycle?: LifecycleOptions;
 }
 
-export function initGameShell(opts: GameShellOptions): Disposable {
+export function initGameShell(opts: GameShellOptions): GameShellHandle {
   const doc = opts.root.ownerDocument;
   const win = doc.defaultView ?? window;
   injectStyles(doc);
   opts.root.classList.add('gs-root');
   const parts: Disposable[] = [startFit(win)];
-  if (opts.install !== false) {
-    parts.push(startInstall({ appName: opts.appName, labels: opts.labels, ...opts.install, win }));
+  const install = opts.install === false ? null : startInstall({ appName: opts.appName, labels: opts.labels, ...opts.install, win });
+  if (install) {
+    parts.push(install);
   }
   if (opts.crash !== false) {
     parts.push(startCrash({ labels: opts.labels, report: opts.crash?.report, origins: opts.crash?.origins, appVersion: opts.appVersion, win }));
@@ -37,6 +38,7 @@ export function initGameShell(opts: GameShellOptions): Disposable {
     parts.push(startVersionPoll({ ...opts.version, win }));
   }
   return {
+    setPlaying: (playing: boolean): void => install?.setPlaying(playing),
     dispose: (): void => {
       parts.forEach((part) => part.dispose());
       opts.root.classList.remove('gs-root');

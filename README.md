@@ -17,14 +17,20 @@ const shell = initGameShell({
   version: { url: '/version.txt', intervalMs: 300_000, onNewVersion: () => location.reload() },
 });
 window.addEventListener(GS_RESIZE_EVENT, () => game.scale.refresh());
+
+// Keep the install chip / card off the playfield during a run; it comes back on the menu.
+game.events.on('run-start', () => shell.setPlaying(true));
+game.events.on('menu', () => shell.setPlaying(false));
 ```
+
+`initGameShell` (and `startInstall`) return a `GameShellHandle`: `dispose()` plus `setPlaying(playing: boolean)`. While playing, the chip/card is removed and a `beforeinstallprompt` fired mid-run is held; `setPlaying(false)` shows it again unless the player already chose Not now, dismissed the native dialog, or installed.
 
 Unity / Godot / vanilla pages: load `dist/game-shell.iife.js` (global `GameShell`) and `dist/game-shell.css`.
 
 | Module | What it does |
 |---|---|
 | `startFit` | `--gs-vh` on `:root` = `visualViewport.height` (else `innerHeight`), re-measured on viewport resize / resize / orientationchange, one `gs:resize` event per change. `.gs-root` sizes a container from it. Never size a game with `100vh`. |
-| `startInstall` | Top-left chip on phones, bottom-right card at ≥1024 px, iOS Safari "Share → Add to Home Screen" steps. Hidden when standalone; "Not now" snoozes 14 days in `localStorage` (`gs-install-snooze:<appName>`). No scrim, no focus trap, Esc = Not now. |
+| `startInstall` | Top-left chip on phones, bottom-right card at ≥1024 px, iOS Safari "Share → Add to Home Screen" steps. Hidden when standalone; "Not now" or dismissing the native install dialog snoozes 14 days and hides it for the rest of the session in `localStorage` (`gs-install-snooze:<appName>`). No scrim, no focus trap, Esc = Not now. |
 | `startCrash` | `error` (ErrorEvent only) + `unhandledrejection` → `report()` every time, overlay once: Reload (focused) and Copy error details. |
 | `startLifecycle` · `unlockAudio` · `prefersReducedMotion` | Visibility callbacks; resume an AudioContext on the first pointerdown/keydown; OS reduce-motion or `?reducedMotion=1`. |
 | `startVersionPoll` | Fetches a URL (`no-store`) on an interval and when the tab is shown; calls `onNewVersion` once when the body changes. |

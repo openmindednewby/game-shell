@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0
+
+- `setPlaying(playing: boolean)` on the handle `initGameShell` / `startInstall` return (new `GameShellHandle` type): the install chip / card hides during play and returns on menus (GAME-FIT-1 "Every game fits the screen and offers install", D20).
+- Dismissing the native install dialog keeps the chip hidden for the rest of the session, even when `beforeinstallprompt` fires again; the 14-day snooze starts at once (D22). An accepted or failed native prompt no longer re-shows a dead chip.
+- Tests assert observable results instead of `not.toThrow` (D23).
+
 ## 0.1.5
 
 - Match the Lintel mockup: `.gs-btn` and `.gs-chip` labels keep their 700 weight and size (the rules are `.gs .gs-btn` / `.gs .gs-chip`, so the `.gs button` `font:inherit` reset no longer beats them). Reload carries the reload icon (`ICONS.reload`).

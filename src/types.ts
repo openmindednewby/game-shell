@@ -2,6 +2,10 @@ export interface Disposable {
   dispose(): void;
 }
 
+export interface GameShellHandle extends Disposable {
+  setPlaying(playing: boolean): void;
+}
+
 export interface GameShellLabels {
   install: string;
   addToHome: string;

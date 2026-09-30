@@ -1,4 +1,4 @@
-import type { Disposable, InstallLabels } from '../types';
+import type { GameShellHandle, InstallLabels } from '../types';
 import { renderBanner } from './banner';
 import { BannerLayout } from './BannerLayout';
 import { InstallVariant } from './InstallVariant';
@@ -26,22 +26,35 @@ interface InstallState {
   deferred: BeforeInstallPromptEvent | null;
   variant: InstallVariant | null;
   node: HTMLElement | null;
+  dismissed: boolean;
+  playing: boolean;
 }
 
-function createController(opts: InstallOptions, win: Window, now: () => number): {
+interface Controller {
   state: InstallState;
-  isDismissed(): boolean;
   mount(): void;
   unmount(): void;
-} {
+  setPlaying(playing: boolean): void;
+}
+
+async function nativeChoice(evt: BeforeInstallPromptEvent): Promise<string | null> {
+  try {
+    await evt.prompt();
+    return (await evt.userChoice).outcome;
+  } catch {
+    return null;
+  }
+}
+
+function createController(opts: InstallOptions, win: Window, now: () => number): Controller {
   const key = snoozeKey(opts.appName, opts.storageKey);
-  const state: InstallState = { deferred: null, variant: null, node: null };
-  let dismissed = false;
+  const state: InstallState = { deferred: null, variant: null, node: null, dismissed: false, playing: false };
   const unmount = (): void => {
     state.node?.remove();
     state.node = null;
   };
-  const snooze = (): void => {
+  const dismiss = (): void => {
+    state.dismissed = true;
     writeSnooze(win, key, now());
     unmount();
   };
@@ -51,20 +64,16 @@ function createController(opts: InstallOptions, win: Window, now: () => number):
     if (!evt) {
       return;
     }
-    try {
-      await evt.prompt();
-      const choice = await evt.userChoice;
-      if (choice.outcome === ACCEPTED) {
-        unmount();
-        return;
-      }
-      snooze();
-    } catch {
-      unmount();
+    const outcome = await nativeChoice(evt);
+    if (outcome !== null && outcome !== ACCEPTED) {
+      dismiss();
+      return;
     }
+    state.variant = null;
+    unmount();
   };
   const mount = (): void => {
-    if (state.variant === null) {
+    if (state.variant === null || state.dismissed || state.playing) {
       return;
     }
     unmount();
@@ -75,31 +84,36 @@ function createController(opts: InstallOptions, win: Window, now: () => number):
       appName: opts.appName,
       labels: opts.labels,
       onInstall: () => void install(),
-      onDismiss: () => {
-        dismissed = true;
-        snooze();
-      },
+      onDismiss: dismiss,
     });
     win.document.body.append(state.node);
   };
-  return { state, isDismissed: (): boolean => dismissed, mount, unmount };
+  const setPlaying = (playing: boolean): void => {
+    state.playing = playing;
+    if (playing) {
+      unmount();
+    } else if (!state.node) {
+      mount();
+    }
+  };
+  return { state, mount, unmount, setPlaying };
 }
 
-export function startInstall(opts: InstallOptions): Disposable {
+const NOOP_HANDLE: GameShellHandle = { dispose: (): void => undefined, setPlaying: (): void => undefined };
+
+export function startInstall(opts: InstallOptions): GameShellHandle {
   const win = opts.win ?? window;
   const now = opts.now ?? ((): number => Date.now());
   const key = snoozeKey(opts.appName, opts.storageKey);
   if (isStandalone(win) || isSnoozed(win, key, opts.snoozeDays ?? DEFAULT_SNOOZE_DAYS, now())) {
-    return { dispose: (): void => undefined };
+    return NOOP_HANDLE;
   }
   const ctl = createController(opts, win, now);
   const onPrompt = (e: Event): void => {
     e.preventDefault();
     ctl.state.deferred = e as BeforeInstallPromptEvent;
     ctl.state.variant = InstallVariant.Prompt;
-    if (!ctl.isDismissed()) {
-      ctl.mount();
-    }
+    ctl.mount();
   };
   const onInstalled = (): void => {
     ctl.state.variant = null;
@@ -119,6 +133,7 @@ export function startInstall(opts: InstallOptions): Disposable {
     ctl.mount();
   }
   return {
+    setPlaying: ctl.setPlaying,
     dispose: (): void => {
       win.removeEventListener('beforeinstallprompt', onPrompt);
       win.removeEventListener('appinstalled', onInstalled);

@@ -1,5 +1,5 @@
 import { initGameShell } from '../initGameShell';
-import type { GameShellHandle, GameShellLabels } from '../types';
+import type { PlayingHandle, GameShellLabels } from '../types';
 import { startInstall } from './install';
 
 const T0 = 1_700_000_000_000;
@@ -21,7 +21,7 @@ const labels: GameShellLabels = {
   errorReported: 'Error reported, ref',
 };
 
-let handle: GameShellHandle | null = null;
+let handle: PlayingHandle | null = null;
 
 function setEnv(ua: string, width: number): void {
   Object.defineProperty(window.navigator, 'userAgent', { configurable: true, value: ua });

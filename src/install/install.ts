@@ -1,4 +1,4 @@
-import type { GameShellHandle, InstallLabels } from '../types';
+import type { PlayingHandle, InstallLabels } from '../types';
 import { renderBanner } from './banner';
 import { BannerLayout } from './BannerLayout';
 import { CardPlacement } from './CardPlacement';
@@ -102,9 +102,9 @@ function createController(opts: InstallOptions, win: Window, now: () => number):
   return { state, mount, unmount, setPlaying };
 }
 
-const NOOP_HANDLE: GameShellHandle = { dispose: (): void => undefined, setPlaying: (): void => undefined };
+const NOOP_HANDLE: PlayingHandle = { dispose: (): void => undefined, setPlaying: (): void => undefined };
 
-export function startInstall(opts: InstallOptions): GameShellHandle {
+export function startInstall(opts: InstallOptions): PlayingHandle {
   const win = opts.win ?? window;
   const now = opts.now ?? ((): number => Date.now());
   const key = snoozeKey(opts.appName, opts.storageKey);

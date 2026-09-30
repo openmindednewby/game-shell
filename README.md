@@ -23,7 +23,17 @@ game.events.on('run-start', () => shell.setPlaying(true));
 game.events.on('menu', () => shell.setPlaying(false));
 ```
 
-`initGameShell` (and `startInstall`) return a `GameShellHandle`: `dispose()` plus `setPlaying(playing: boolean)`. While playing, the chip/card is removed and a `beforeinstallprompt` fired mid-run is held; `setPlaying(false)` shows it again unless the player already chose Not now, dismissed the native dialog, or installed.
+`initGameShell` returns a `GameShellHandle`: `dispose()`, `setPlaying(playing: boolean)` and `whenIdle(fn)`; `startInstall` returns a `PlayingHandle` (`dispose()` + `setPlaying`). While playing, the chip/card is removed and a `beforeinstallprompt` fired mid-run is held; `setPlaying(false)` shows it again unless the player already chose Not now, dismissed the native dialog, or installed.
+
+### Reloads wait for the menu (`whenIdle`)
+
+`initGameShell` installs `window.__gsWhenIdle(fn)` (also `handle.whenIdle(fn)`) so nothing reloads a game mid-run. `fn` runs:
+
+1. at once, if the game is not playing;
+2. otherwise on the next `setPlaying(false)`;
+3. otherwise, once `idle.maxWaitMs` has passed (default 30 min, `DEFAULT_IDLE_MAX_WAIT_MS`), on the next switch of the tab to hidden, or at once if it is already hidden.
+
+One callback per page load: a second call while one is pending, or after one has run, is dropped. `version.onNewVersion` goes through it, and `@dloizides/pwa-sw`'s register snippet calls `(window.__gsWhenIdle || run)(reload)`, so a service-worker update waits too. Apps without the shell keep reloading at once. `startIdleGate({ win, maxWaitMs })` is the standalone gate.
 
 Unity / Godot / vanilla pages: load `dist/game-shell.iife.js` (global `GameShell`) and `dist/game-shell.css`.
 

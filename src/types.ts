@@ -2,8 +2,12 @@ export interface Disposable {
   dispose(): void;
 }
 
-export interface GameShellHandle extends Disposable {
+export interface PlayingHandle extends Disposable {
   setPlaying(playing: boolean): void;
+}
+
+export interface GameShellHandle extends PlayingHandle {
+  whenIdle(fn: () => void): void;
 }
 
 export interface GameShellLabels {

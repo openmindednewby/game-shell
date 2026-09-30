@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+- Reloads never interrupt play (PWA-RELOAD-1 "Updates never reload a game mid-play"). `initGameShell` installs `window.__gsWhenIdle(fn)` and exposes `handle.whenIdle(fn)`: `fn` runs at once outside play, else on the next `setPlaying(false)`, else after `idle.maxWaitMs` (default 30 min) on the next tab hide (at once if already hidden). One callback per page load; later calls are dropped. `version.onNewVersion` now goes through it. `startIdleGate`, `DEFAULT_IDLE_MAX_WAIT_MS`, `WHEN_IDLE_GLOBAL` and the `IdleGate` / `WhenIdle` / `WhenIdleWindow` types are exported. The IIFE build (`GameShell`) carries all of it.
+- `startInstall` now returns the new `PlayingHandle` type (`dispose` + `setPlaying`); `GameShellHandle` extends it with `whenIdle`. Code that typed a `startInstall` result as `GameShellHandle` should use `PlayingHandle`.
+
 ## 0.3.0
 
 - `install.cardPlacement` (`initGameShell`) / `cardPlacement` (`startInstall`): `'bottom-right'` (default, unchanged) or `'top-right'`, set as `data-placement` on the desktop card. The top-right card sits `--gs-card-top` (default 16px) plus the safe-area inset from the top, 24px in from the right. Games using it keep that corner free or set `--gs-card-top` (GAME-FIT-1 "Every game fits the screen and offers install", D25). `CardPlacement` is exported.

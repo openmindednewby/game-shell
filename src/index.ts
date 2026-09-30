@@ -14,5 +14,7 @@ export { startLifecycle, unlockAudio, prefersReducedMotion } from './lifecycle/l
 export type { LifecycleOptions, ResumableAudio } from './lifecycle/lifecycle';
 export { startVersionPoll } from './version/versionPoll';
 export type { VersionPollOptions } from './version/versionPoll';
+export { startIdleGate, DEFAULT_IDLE_MAX_WAIT_MS, WHEN_IDLE_GLOBAL } from './idle/whenIdle';
+export type { IdleGate, IdleGateOptions, WhenIdle, WhenIdleWindow } from './idle/whenIdle';
 export { GAME_SHELL_CSS, injectStyles } from './styles';
-export type { Disposable, GameShellHandle, GameShellLabels, InstallLabels, CrashLabels } from './types';
+export type { Disposable, GameShellHandle, PlayingHandle, GameShellLabels, InstallLabels, CrashLabels } from './types';

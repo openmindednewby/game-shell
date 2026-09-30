@@ -1,3 +1,4 @@
+import { startIdleGate, WHEN_IDLE_GLOBAL, type WhenIdleWindow } from './idle/whenIdle';
 import { startCrash } from './crash/crash';
 import type { CrashInfo } from './crash/crashKind';
 import { startFit } from './fit/fit';
@@ -15,6 +16,7 @@ export interface GameShellOptions {
   appVersion?: string;
   install?: { snoozeDays?: number; storageKey?: string; cardPlacement?: CardPlacement } | false;
   version?: { url: string; intervalMs: number; onNewVersion(): void };
+  idle?: { maxWaitMs?: number };
   crash?: { report?(info: CrashInfo): string | void; origins?: string[] } | false;
   lifecycle?: LifecycleOptions;
 }
@@ -24,7 +26,10 @@ export function initGameShell(opts: GameShellOptions): GameShellHandle {
   const win = doc.defaultView ?? window;
   injectStyles(doc);
   opts.root.classList.add('gs-root');
-  const parts: Disposable[] = [startFit(win)];
+  const gate = startIdleGate({ win, maxWaitMs: opts.idle?.maxWaitMs });
+  const idleWin = win as WhenIdleWindow;
+  idleWin[WHEN_IDLE_GLOBAL] = gate.whenIdle;
+  const parts: Disposable[] = [startFit(win), gate];
   const install = opts.install === false ? null : startInstall({ appName: opts.appName, labels: opts.labels, ...opts.install, win });
   if (install) {
     parts.push(install);
@@ -36,11 +41,19 @@ export function initGameShell(opts: GameShellOptions): GameShellHandle {
     parts.push(startLifecycle(opts.lifecycle, doc));
   }
   if (opts.version) {
-    parts.push(startVersionPoll({ ...opts.version, win }));
+    const { onNewVersion } = opts.version;
+    parts.push(startVersionPoll({ ...opts.version, onNewVersion: () => gate.whenIdle(onNewVersion), win }));
   }
   return {
-    setPlaying: (playing: boolean): void => install?.setPlaying(playing),
+    setPlaying: (playing: boolean): void => {
+      install?.setPlaying(playing);
+      gate.setPlaying(playing);
+    },
+    whenIdle: gate.whenIdle,
     dispose: (): void => {
+      if (idleWin[WHEN_IDLE_GLOBAL] === gate.whenIdle) {
+        delete idleWin[WHEN_IDLE_GLOBAL];
+      }
       parts.forEach((part) => part.dispose());
       opts.root.classList.remove('gs-root');
     },

@@ -10,7 +10,7 @@ const BASE = `.gs{font-family:var(--gs-font-text);color:var(--gs-ink);box-sizing
 .gs button:focus-visible{outline:2px solid var(--gs-focus);outline-offset:2px}
 .gs svg{width:20px;height:20px;flex:none}
 .gs-ico{display:inline-flex}
-.gs-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 18px;border-radius:var(--gs-radius);font:700 16px/1 var(--gs-font-text);white-space:nowrap}
+.gs .gs-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 18px;border-radius:var(--gs-radius);font:700 16px/1 var(--gs-font-text);white-space:nowrap}
 .gs .gs-primary{background:var(--gs-accent);color:var(--gs-on-accent)}
 .gs .gs-ghost{color:var(--gs-ink);border:1px solid var(--gs-edge)}
 .gs-x{width:44px;height:44px;display:grid;place-items:center;color:var(--gs-ink-dim);flex:none}
@@ -18,10 +18,10 @@ const BASE = `.gs{font-family:var(--gs-font-text);color:var(--gs-ink);box-sizing
 .gs-txt b{display:block;font:400 18px/1.2 var(--gs-font-display);color:var(--gs-ink)}
 .gs-txt span{display:block;font-size:14px;line-height:1.4;color:var(--gs-ink-dim);margin-top:3px}`;
 
-const INSTALL = `.gs-install{position:fixed;z-index:2147483000;top:calc(12px + var(--gs-safe-top));left:calc(12px + var(--gs-safe-left))}
+const INSTALL = `.gs-install{position:fixed;z-index:2147483000;top:calc(16px + var(--gs-safe-top));left:calc(16px + var(--gs-safe-left))}
 .gs-install[data-layout=card]{top:auto;left:auto;right:calc(24px + var(--gs-safe-right));bottom:calc(var(--gs-card-bottom,60px) + var(--gs-safe-bottom))}
 .gs-seal{display:flex;align-items:center;background:var(--gs-surface);border:1px solid var(--gs-edge);border-radius:var(--gs-radius-pill)}
-.gs-chip{display:flex;align-items:center;gap:8px;padding:0 6px 0 14px;font:700 15px var(--gs-font-text);color:var(--gs-ink)}
+.gs .gs-chip{display:flex;align-items:center;gap:8px;padding:0 6px 0 14px;font:700 15px var(--gs-font-text);color:var(--gs-ink)}
 .gs-chip svg{color:var(--gs-accent)}
 .gs-seal .gs-x{border-left:1px solid var(--gs-edge)}
 .gs-steps{margin:8px 0 0;width:262px;padding:10px 14px;list-style:none;background:var(--gs-surface);border:1px solid var(--gs-edge);border-radius:var(--gs-radius);display:grid;gap:2px;counter-reset:s}

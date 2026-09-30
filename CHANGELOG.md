@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.5
+
+- Match the Lintel mockup: `.gs-btn` and `.gs-chip` labels keep their 700 weight and size (the rules are `.gs .gs-btn` / `.gs .gs-chip`, so the `.gs button` `font:inherit` reset no longer beats them). Reload carries the reload icon (`ICONS.reload`).
+- The install chip sits 16px in from the safe edge (was 12px), the G-2.7 edge.
+
 ## 0.1.4
 
 - Crash overlay and report fire only for script errors whose file is same-origin with the page (or listed in `crash.origins`). Third-party errors (ads, analytics) and opaque cross-origin `Script error.` with no filename are ignored. `unhandledrejection` is unchanged.

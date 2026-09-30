@@ -1,4 +1,5 @@
 import { button, el } from '../dom';
+import { ICONS } from '../icons';
 import type { CrashLabels } from '../types';
 
 const CRASH_TITLE_ID = 'gs-crash-title';
@@ -29,7 +30,7 @@ export function renderCrashOverlay(p: CrashOverlayProps): CrashOverlayView {
   const body = el(p.doc, 'p', '', p.labels.crashBody);
   body.id = CRASH_BODY_ID;
   const acts = el(p.doc, 'div', 'gs-acts');
-  const reload = button(p.doc, { className: 'gs-btn gs-primary', text: p.labels.reload, onClick: p.onReload });
+  const reload = button(p.doc, { className: 'gs-btn gs-primary', text: p.labels.reload, icon: ICONS.reload, onClick: p.onReload });
   acts.append(reload, button(p.doc, { className: 'gs-btn gs-ghost', text: p.labels.copyDetails, onClick: p.onCopy }));
   panel.append(title, body, acts);
   if (p.reference !== undefined && p.reference !== '') {

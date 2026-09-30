@@ -11,7 +11,7 @@ const BASE = `.gs{font-family:var(--gs-font-text);color:var(--gs-ink);box-sizing
 .gs svg{width:20px;height:20px;flex:none}
 .gs-ico{display:inline-flex}
 .gs-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 18px;border-radius:var(--gs-radius);font:700 16px/1 var(--gs-font-text);white-space:nowrap}
-.gs-primary{background:var(--gs-accent);color:var(--gs-on-accent)}
+.gs .gs-primary{background:var(--gs-accent);color:var(--gs-on-accent)}
 .gs .gs-ghost{color:var(--gs-ink);border:1px solid var(--gs-edge)}
 .gs-x{width:44px;height:44px;display:grid;place-items:center;color:var(--gs-ink-dim);flex:none}
 .gs-txt{min-width:0}

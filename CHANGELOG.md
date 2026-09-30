@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+- Install and Reload keep their --gs-accent fill: the primary rule is `.gs .gs-primary`, so the `.gs button` background reset no longer out-specifies it.
+
 ## 0.1.2
 
 - Install: a beforeinstallprompt re-fired after Not now no longer brings the chip back in the same session.

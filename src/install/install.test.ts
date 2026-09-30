@@ -1,3 +1,4 @@
+import { CardPlacement } from './CardPlacement';
 import { startInstall } from './install';
 import type { Disposable, InstallLabels } from '../types';
 
@@ -156,5 +157,23 @@ describe('install', () => {
     setEnv(ANDROID_UA, 412);
     window.dispatchEvent(new Event('resize'));
     expect(banner()?.dataset.layout).toBe('chip');
+  });
+
+  it('D25 the desktop card defaults to bottom-right and takes top-right when a game asks for it', () => {
+    setEnv(ANDROID_UA, 1280);
+    handle = startInstall({ appName: APP, labels, now: () => T0 });
+    firePrompt();
+    expect(banner()?.dataset.placement).toBe(CardPlacement.BottomRight);
+    handle.dispose();
+    document.body.innerHTML = '';
+
+    handle = startInstall({ appName: APP, labels, now: () => T0, cardPlacement: CardPlacement.TopRight });
+    firePrompt();
+    expect(banner()?.dataset.placement).toBe(CardPlacement.TopRight);
+
+    setEnv(ANDROID_UA, 412);
+    window.dispatchEvent(new Event('resize'));
+    expect(banner()?.dataset.layout).toBe('chip');
+    expect(banner()?.dataset.placement).toBeUndefined();
   });
 });

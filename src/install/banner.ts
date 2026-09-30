@@ -2,6 +2,7 @@ import { button, el, iconSpan } from '../dom';
 import { ICONS } from '../icons';
 import type { InstallLabels } from '../types';
 import { BannerLayout } from './BannerLayout';
+import type { CardPlacement } from './CardPlacement';
 import { InstallVariant } from './InstallVariant';
 
 const STEPS_ID = 'gs-install-steps';
@@ -10,6 +11,7 @@ interface BannerProps {
   doc: Document;
   layout: BannerLayout;
   variant: InstallVariant;
+  placement?: CardPlacement;
   appName: string;
   labels: InstallLabels;
   onInstall(): void;
@@ -78,6 +80,9 @@ export function renderBanner(p: BannerProps): HTMLElement {
   const wrap = el(p.doc, 'div', 'gs gs-install');
   wrap.dataset.layout = p.layout;
   wrap.dataset.variant = p.variant;
+  if (p.layout === BannerLayout.Card && p.placement !== undefined) {
+    wrap.dataset.placement = p.placement;
+  }
   wrap.setAttribute('role', 'region');
   wrap.setAttribute('aria-label', p.variant === InstallVariant.Prompt ? p.labels.install : p.labels.addToHome);
   wrap.addEventListener('keydown', (e) => {

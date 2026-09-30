@@ -30,7 +30,7 @@ Unity / Godot / vanilla pages: load `dist/game-shell.iife.js` (global `GameShell
 | Module | What it does |
 |---|---|
 | `startFit` | `--gs-vh` on `:root` = `visualViewport.height` (else `innerHeight`), re-measured on viewport resize / resize / orientationchange, one `gs:resize` event per change. `.gs-root` sizes a container from it. Never size a game with `100vh`. |
-| `startInstall` | Top-left chip on phones, bottom-right card at ≥1024 px, iOS Safari "Share → Add to Home Screen" steps. Hidden when standalone; "Not now" or dismissing the native install dialog snoozes 14 days and hides it for the rest of the session in `localStorage` (`gs-install-snooze:<appName>`). No scrim, no focus trap, Esc = Not now. |
+| `startInstall` | Top-left chip on phones, a card at ≥1024 px (bottom-right by default; `install: { cardPlacement: 'top-right' }` moves it to the top-right corner for games whose bottom-right holds controls), iOS Safari "Share → Add to Home Screen" steps. Hidden when standalone; "Not now" or dismissing the native install dialog snoozes 14 days and hides it for the rest of the session in `localStorage` (`gs-install-snooze:<appName>`). No scrim, no focus trap, Esc = Not now. |
 | `startCrash` | `error` (ErrorEvent only) + `unhandledrejection` → `report()` every time, overlay once: Reload (focused) and Copy error details. |
 | `startLifecycle` · `unlockAudio` · `prefersReducedMotion` | Visibility callbacks; resume an AudioContext on the first pointerdown/keydown; OS reduce-motion or `?reducedMotion=1`. |
 | `startVersionPoll` | Fetches a URL (`no-store`) on an interval and when the tab is shown; calls `onNewVersion` once when the body changes. |
@@ -38,4 +38,4 @@ Unity / Godot / vanilla pages: load `dist/game-shell.iife.js` (global `GameShell
 ## Theme
 
 Every overlay reads only these CSS variables; defaults are a neutral dark theme. Set them on `:root` in the game:
-`--gs-font-display --gs-font-text --gs-surface --gs-surface-solid --gs-edge --gs-ink --gs-ink-dim --gs-accent --gs-on-accent --gs-scrim --gs-radius --gs-radius-pill --gs-focus`, plus `--gs-card-bottom` (desktop card offset from the bottom, default 60px).
+`--gs-font-display --gs-font-text --gs-surface --gs-surface-solid --gs-edge --gs-ink --gs-ink-dim --gs-accent --gs-on-accent --gs-scrim --gs-radius --gs-radius-pill --gs-focus`, plus `--gs-card-bottom` (desktop card offset from the bottom, default 60px) and `--gs-card-top` (offset from the top when `cardPlacement` is `'top-right'`, default 16px; both add the safe-area inset). A game that asks for `'top-right'` keeps that corner free of its own controls (for example a ☰ menu button), or sets `--gs-card-top` to clear them.

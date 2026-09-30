@@ -4,6 +4,7 @@ export { startFit, GS_RESIZE_EVENT, GS_VH_VAR } from './fit/fit';
 export type { GsResizeDetail } from './fit/fit';
 export { startInstall, DEFAULT_SNOOZE_DAYS } from './install/install';
 export type { InstallOptions, BeforeInstallPromptEvent } from './install/install';
+export { CardPlacement } from './install/CardPlacement';
 export { isStandalone, isIosSafari, isDesktop, DESKTOP_MIN_WIDTH } from './install/platform';
 export { startCrash } from './crash/crash';
 export type { CrashOptions } from './crash/crash';

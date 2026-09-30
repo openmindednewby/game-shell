@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- `install.cardPlacement` (`initGameShell`) / `cardPlacement` (`startInstall`): `'bottom-right'` (default, unchanged) or `'top-right'`, set as `data-placement` on the desktop card. The top-right card sits `--gs-card-top` (default 16px) plus the safe-area inset from the top, 24px in from the right. Games using it keep that corner free or set `--gs-card-top` (GAME-FIT-1 "Every game fits the screen and offers install", D25). `CardPlacement` is exported.
+
 ## 0.2.0
 
 - `setPlaying(playing: boolean)` on the handle `initGameShell` / `startInstall` return (new `GameShellHandle` type): the install chip / card hides during play and returns on menus (GAME-FIT-1 "Every game fits the screen and offers install", D20).

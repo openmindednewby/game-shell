@@ -1,6 +1,7 @@
 import type { GameShellHandle, InstallLabels } from '../types';
 import { renderBanner } from './banner';
 import { BannerLayout } from './BannerLayout';
+import { CardPlacement } from './CardPlacement';
 import { InstallVariant } from './InstallVariant';
 import { isDesktop, isIosSafari, isStandalone } from './platform';
 import { isSnoozed, snoozeKey, writeSnooze } from './snooze';
@@ -18,6 +19,7 @@ export interface InstallOptions {
   labels: InstallLabels;
   snoozeDays?: number;
   storageKey?: string;
+  cardPlacement?: CardPlacement;
   win?: Window;
   now?: () => number;
 }
@@ -81,6 +83,7 @@ function createController(opts: InstallOptions, win: Window, now: () => number):
       doc: win.document,
       layout: isDesktop(win) ? BannerLayout.Card : BannerLayout.Chip,
       variant: state.variant,
+      placement: opts.cardPlacement ?? CardPlacement.BottomRight,
       appName: opts.appName,
       labels: opts.labels,
       onInstall: () => void install(),

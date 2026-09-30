@@ -1,6 +1,7 @@
 import { startCrash } from './crash/crash';
 import type { CrashInfo } from './crash/crashKind';
 import { startFit } from './fit/fit';
+import type { CardPlacement } from './install/CardPlacement';
 import { startInstall } from './install/install';
 import { startLifecycle, type LifecycleOptions } from './lifecycle/lifecycle';
 import { injectStyles } from './styles';
@@ -12,7 +13,7 @@ export interface GameShellOptions {
   appName: string;
   labels: GameShellLabels;
   appVersion?: string;
-  install?: { snoozeDays?: number; storageKey?: string } | false;
+  install?: { snoozeDays?: number; storageKey?: string; cardPlacement?: CardPlacement } | false;
   version?: { url: string; intervalMs: number; onNewVersion(): void };
   crash?: { report?(info: CrashInfo): string | void; origins?: string[] } | false;
   lifecycle?: LifecycleOptions;

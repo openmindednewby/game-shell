@@ -8,6 +8,7 @@ export interface CrashOptions {
   appVersion?: string;
   win?: Window;
   reload?: () => void;
+  origins?: string[];
 }
 
 function fromErrorEvent(e: ErrorEvent): CrashInfo {
@@ -28,6 +29,22 @@ function fromRejection(e: Event): CrashInfo {
 
 function isErrorEvent(e: Event): e is ErrorEvent {
   return typeof (e as Partial<ErrorEvent>).message === 'string';
+}
+
+function originOf(url: string): string | undefined {
+  try {
+    return new URL(url).origin;
+  } catch {
+    return undefined;
+  }
+}
+
+function isOwnError(e: ErrorEvent, allowed: ReadonlySet<string>): boolean {
+  if (e.filename === '') {
+    return false;
+  }
+  const origin = originOf(e.filename);
+  return origin !== undefined && allowed.has(origin);
 }
 
 function safeReport(opts: CrashOptions, info: CrashInfo): string | undefined {
@@ -53,6 +70,7 @@ export function startCrash(opts: CrashOptions): Disposable {
   const win = opts.win ?? window;
   const reload = opts.reload ?? ((): void => win.location.reload());
   let overlay: HTMLElement | null = null;
+  const allowed = new Set([win.location.origin, ...(opts.origins ?? []).map((o) => originOf(o) ?? o)]);
 
   const handle = (info: CrashInfo): void => {
     const reference = safeReport(opts, info);
@@ -71,7 +89,7 @@ export function startCrash(opts: CrashOptions): Disposable {
     view.reload.focus();
   };
   const onError = (e: Event): void => {
-    if (isErrorEvent(e)) {
+    if (isErrorEvent(e) && isOwnError(e, allowed)) {
       handle(fromErrorEvent(e));
     }
   };

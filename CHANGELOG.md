@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4
+
+- Crash overlay and report fire only for script errors whose file is same-origin with the page (or listed in `crash.origins`). Third-party errors (ads, analytics) and opaque cross-origin `Script error.` with no filename are ignored. `unhandledrejection` is unchanged.
+
 ## 0.1.3
 
 - Install and Reload keep their --gs-accent fill: the primary rule is `.gs .gs-primary`, so the `.gs button` background reset no longer out-specifies it.

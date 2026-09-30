@@ -14,7 +14,7 @@ export interface GameShellOptions {
   appVersion?: string;
   install?: { snoozeDays?: number; storageKey?: string } | false;
   version?: { url: string; intervalMs: number; onNewVersion(): void };
-  crash?: { report?(info: CrashInfo): string | void } | false;
+  crash?: { report?(info: CrashInfo): string | void; origins?: string[] } | false;
   lifecycle?: LifecycleOptions;
 }
 
@@ -28,7 +28,7 @@ export function initGameShell(opts: GameShellOptions): Disposable {
     parts.push(startInstall({ appName: opts.appName, labels: opts.labels, ...opts.install, win }));
   }
   if (opts.crash !== false) {
-    parts.push(startCrash({ labels: opts.labels, report: opts.crash?.report, appVersion: opts.appVersion, win }));
+    parts.push(startCrash({ labels: opts.labels, report: opts.crash?.report, origins: opts.crash?.origins, appVersion: opts.appVersion, win }));
   }
   if (opts.lifecycle) {
     parts.push(startLifecycle(opts.lifecycle, doc));

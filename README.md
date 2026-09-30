@@ -11,7 +11,8 @@ const shell = initGameShell({
   appVersion: BUILD_VERSION,
   labels: { install, addToHome, notNow, tapShare, tapAdd, installBody,
             crashTitle, crashBody, reload, copyDetails, errorReported },
-  crash: { report: (e) => sendToSink(e) },          // return a short ref to show it
+  crash: { report: (e) => sendToSink(e),            // return a short ref to show it
+           origins: ['https://cdn.example.com'] },  // optional: extra script origins that count as the game's own
   lifecycle: { onHidden: pauseAudio, onVisible: resumeAudio },
   version: { url: '/version.txt', intervalMs: 300_000, onNewVersion: () => location.reload() },
 });

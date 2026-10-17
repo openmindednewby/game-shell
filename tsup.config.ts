@@ -16,6 +16,7 @@ export default defineConfig([
     entry: { 'game-shell': 'src/index.ts' },
     format: ['iife'],
     globalName: 'GameShell',
+    noExternal: ['qrcode-generator'],
     outExtension: () => ({ js: '.iife.js' }),
     minify: true,
     sourcemap: true,

@@ -6,5 +6,7 @@ export const ICONS = {
   add: svg('<path d="M12 5v14M5 12h14"/>'),
   close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
   share: svg('<path d="M12 15V4M8 8l4-4 4 4M6 12v8h12v-8"/>'),
+  link: svg('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'),
+  check: svg('<path d="M5 12l5 5 9-10"/>'),
   reload: svg('<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/>'),
 } as const;

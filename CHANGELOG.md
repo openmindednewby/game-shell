@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0
+
+- Share and offline (GAME-SHARE-1 "Share, QR and offline download in every game"). `openShareSheet` (Web Share, copy-link fallback with a toast, QR code), `shareLink`, `copyLink`, `canWebShare`, `buildDeepLink`, `buildInviteText`, `qrSvg`, `showToast`, `SHARE_OUTCOME`; `downloadForOffline` (chunked `cache.addAll` with progress), `isAvailableOffline`, `isOfflineSupported`, `mountOfflineButton`, `OFFLINE_STATE`. New icons `link` and `check`, theme variables `--gs-qr-ink` / `--gs-qr-paper`.
+- First runtime dependency: `qrcode-generator` (MIT). The IIFE build bundles it; ESM / CJS import it.
+
 ## 0.4.1
 
 - `IdleGate.dispose()` no longer leaks (PWA-RELOAD-1 "Updates never reload a game mid-play"): a waiting callback runs if the game is not playing and is dropped during play; afterwards `whenIdle` and `setPlaying` arm no timer, add no listener and run nothing. The README documents that `initGameShell`'s `dispose()` removes `window.__gsWhenIdle` (pwa-sw then reloads at once) and that `version.onNewVersion` must reload because it takes the page's one slot.

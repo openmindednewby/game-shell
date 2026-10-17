@@ -49,6 +49,39 @@ Unity / Godot / vanilla pages: load `dist/game-shell.iife.js` (global `GameShell
 | `startLifecycle` · `unlockAudio` · `prefersReducedMotion` | Visibility callbacks; resume an AudioContext on the first pointerdown/keydown; OS reduce-motion or `?reducedMotion=1`. |
 | `startVersionPoll` | Fetches a URL (`no-store`) on an interval and when the tab is shown; calls `onNewVersion` once when the body changes. |
 
+## Share and offline (GAME-SHARE-1 "Share, QR and offline download in every game")
+
+```ts
+import { openShareSheet, buildDeepLink, buildInviteText, mountOfflineButton } from '@dloizides/game-shell';
+
+const url = buildDeepLink({ stage: 3 });                     // origin + path of location.href, old query and hash dropped
+openShareSheet({
+  url,
+  title: 'Surge',
+  text: buildInviteText(t.invite, { score: '1,240 m' }),     // '{score}' style placeholders; unknown ones are kept
+  labels: { title, share, copyLink, copied, copyFailed, close, qr },
+  onOutcome: (o) => track(o),                                // SHARE_OUTCOME: shared | copied | cancelled | failed
+});
+
+mountOfflineButton({
+  parent: settingsRow,
+  urls: ['/campaign/realm-1.json', '/campaign/realm-2.json'],
+  labels: { download, progress: '{done} / {total}', available, failed },
+});
+```
+
+| Export | What it does |
+|---|---|
+| `openShareSheet` | Bottom sheet on phones, a centred two-column dialog (QR left) at ≥1024 px. Share (only when `navigator.share` accepts the data) and Copy link; a toast says copied / could not copy. Esc, the close button or a scrim click close it; focus returns to the opener. Returns `Disposable`. |
+| `shareLink` · `copyLink` · `canWebShare` | Web Share, falling back to the clipboard when Web Share is missing, refuses the data or fails (a user dismiss is `cancelled`, no copy). The copy is `text + ' ' + url`. |
+| `buildDeepLink(params, base?)` · `buildInviteText(template, vars)` | Level / daily links and score invites. Empty and undefined params are skipped. |
+| `qrSvg(text)` · `showToast(text, ms?, doc?)` | QR as an SVG string (`qrcode-generator`, level M, 4-module quiet zone); a `role=status` toast. |
+| `downloadForOffline(urls, onProgress?, opts?)` | De-duplicates `urls`, then `cache.addAll` in chunks (`chunkSize`, default 4) into `cacheName` (default `gs-offline-v1`), reporting `{ done, total }` before the first chunk and after each. A failed chunk rejects and stops. |
+| `isAvailableOffline(urls, opts?)` · `isOfflineSupported(opts?)` | Every url is in that cache (an empty list is `false`); Cache Storage exists. |
+| `mountOfflineButton` | One full-width button: download, then a progress bar with `{done} / {total}`, then "available" (disabled, check icon), or failed (retry). Shows "available" at once when already cached; mounts nothing without Cache Storage. |
+
+The service worker must answer these requests from Cache Storage (`caches.match` searches every cache) and must not bypass it for them (for example a network-only fetch with `cache: 'no-cache'`), or the cached copies are never served offline. The QR uses `--gs-qr-ink` / `--gs-qr-paper` (default black on white; keep a dark-on-light pair so phone cameras read it).
+
 ## Theme
 
 Every overlay reads only these CSS variables; defaults are a neutral dark theme. Set them on `:root` in the game:

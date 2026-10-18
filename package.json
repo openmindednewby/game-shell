@@ -1,6 +1,6 @@
 {
   "name": "@dloizides/game-shell",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Framework-free web game shell: fits the visible viewport (--gs-vh), offers install (chip / card / iOS steps), shows a crash overlay, pauses on hide, unlocks audio, polls for new versions, shares a link (Web Share, copy, QR) and downloads assets for offline play. ESM + CJS + IIFE (global GameShell) + game-shell.css. One runtime dep: qrcode-generator.",
   "keywords": [
     "game",

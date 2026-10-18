@@ -29,5 +29,7 @@ export { downloadForOffline, isAvailableOffline, isOfflineSupported, DEFAULT_OFF
 export type { OfflineOptions, OfflineProgress } from './offline/offline';
 export { mountOfflineButton, OFFLINE_STATE } from './offline/offlineButton';
 export type { OfflineButtonLabels, OfflineButtonOptions, OfflineState } from './offline/offlineButton';
+export { FpsMeter, fpsEnabled, mountFpsMeter, FPS_QUERY_PARAM, FPS_REFRESH_MS, FPS_WINDOW } from './fps/fpsMeter';
+export type { FpsMeterOptions, FpsSample, FrameLoad, FrameTimes, MountFpsMeterOptions } from './fps/fpsMeter';
 export { GAME_SHELL_CSS, injectStyles } from './styles';
 export type { Disposable, GameShellHandle, PlayingHandle, GameShellLabels, InstallLabels, CrashLabels } from './types';

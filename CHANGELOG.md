@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- `?fps=1` frame meter (GAME-FEEL-1 "Make games feel well made"). `mountFpsMeter({ host?, search?, now? })` mounts an `FpsMeter` only when the query has `fps=1` (else `null`); `fpsEnabled(search?)`. `meter.push({ frameMs, simMs?, renderMs?, cpuMs? }, load?)` once per frame: fps from the median frame time, p50/p95 over the last 288 frames, mean sim/render/other when `cpuMs` is given, draws/tris/canvas size when `load` is given; repaints every 250 ms. `.gs-fps` sits top-left inside the safe area, pointer-events none. Ported from Surge `src/fpsMeter.ts`.
+
 ## 0.5.0
 
 - Share and offline (GAME-SHARE-1 "Share, QR and offline download in every game"). `openShareSheet` (Web Share, copy-link fallback with a toast, QR code), `shareLink`, `copyLink`, `canWebShare`, `buildDeepLink`, `buildInviteText`, `qrSvg`, `showToast`, `SHARE_OUTCOME`; `downloadForOffline` (chunked `cache.addAll` with progress), `isAvailableOffline`, `isOfflineSupported`, `mountOfflineButton`, `OFFLINE_STATE`. New icons `link` and `check`, theme variables `--gs-qr-ink` / `--gs-qr-paper`.

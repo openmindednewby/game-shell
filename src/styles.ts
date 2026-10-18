@@ -69,7 +69,9 @@ const OFFLINE = `.gs-offline .gs-btn{position:relative;overflow:hidden;width:100
 .gs-offline[data-state=idle] .gs-bar,.gs-offline[data-state=done] .gs-bar,.gs-offline[data-state=failed] .gs-bar{display:none}
 .gs-offline .gs-bar i{display:block;height:100%;width:0;background:var(--gs-accent);transition:width .2s}`;
 
-export const GAME_SHELL_CSS = [THEME, ROOT, BASE, INSTALL, CRASH, SHARE, OFFLINE].join('\n');
+const FPS = `.gs-fps{position:fixed;z-index:2147483003;top:calc(8px + var(--gs-safe-top));left:calc(8px + var(--gs-safe-left));margin:0;padding:6px 8px;border-radius:6px;background:var(--gs-surface);font:12px/1.35 ui-monospace,monospace;white-space:pre;pointer-events:none}`;
+
+export const GAME_SHELL_CSS = [THEME, ROOT, BASE, INSTALL, CRASH, SHARE, OFFLINE, FPS].join('\n');
 
 export function injectStyles(doc: Document = document): void {
   if (doc.getElementById(STYLE_ID)) {

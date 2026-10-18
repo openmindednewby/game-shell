@@ -82,6 +82,20 @@ mountOfflineButton({
 
 The service worker must answer these requests from Cache Storage (`caches.match` searches every cache) and must not bypass it for them (for example a network-only fetch with `cache: 'no-cache'`), or the cached copies are never served offline. The QR uses `--gs-qr-ink` / `--gs-qr-paper` (default black on white; keep a dark-on-light pair so phone cameras read it).
 
+## FPS meter (`?fps=1`)
+
+```ts
+import { mountFpsMeter } from '@dloizides/game-shell';
+
+const meter = mountFpsMeter();                                // null unless the URL has ?fps=1
+meter?.push({ frameMs, simMs, renderMs, cpuMs }, { draws, tris, w, h });   // once per frame; times and load optional past frameMs
+```
+
+| Export | What it does |
+|---|---|
+| `mountFpsMeter(opts?)` · `fpsEnabled(search?)` | Mounts a `pre.gs-fps` (`data-testid=fps-meter`) on `host` (default `document.body`) only with `fps=1`. |
+| `FpsMeter` | `push` records a frame; every 250 ms it paints fps (from p50), frame ms p50/p95 over the last 288 frames, then sim/render/other ms when `cpuMs` is passed and draws/tris/size when `load` is passed. `last` holds the numbers; `remove()` takes it off. |
+
 ## Theme
 
 Every overlay reads only these CSS variables; defaults are a neutral dark theme. Set them on `:root` in the game:

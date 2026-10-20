@@ -11,7 +11,7 @@ export interface CrashOptions {
   origins?: string[];
 }
 
-function fromErrorEvent(e: ErrorEvent): CrashInfo {
+export function fromErrorEvent(e: ErrorEvent): CrashInfo {
   const err: unknown = e.error;
   const stack = err instanceof Error ? err.stack : undefined;
   const location = e.filename !== '' ? `${e.filename}:${e.lineno}:${e.colno}` : undefined;
@@ -19,7 +19,7 @@ function fromErrorEvent(e: ErrorEvent): CrashInfo {
   return { kind: CRASH_KIND.Error, message, source: stack ?? location };
 }
 
-function fromRejection(e: Event): CrashInfo {
+export function fromRejection(e: Event): CrashInfo {
   const reason: unknown = (e as PromiseRejectionEvent).reason;
   if (reason instanceof Error) {
     return { kind: CRASH_KIND.Rejection, message: reason.message, source: reason.stack };
@@ -27,11 +27,11 @@ function fromRejection(e: Event): CrashInfo {
   return { kind: CRASH_KIND.Rejection, message: String(reason) };
 }
 
-function isErrorEvent(e: Event): e is ErrorEvent {
+export function isErrorEvent(e: Event): e is ErrorEvent {
   return typeof (e as Partial<ErrorEvent>).message === 'string';
 }
 
-function originOf(url: string): string | undefined {
+export function originOf(url: string): string | undefined {
   try {
     return new URL(url).origin;
   } catch {
@@ -39,7 +39,7 @@ function originOf(url: string): string | undefined {
   }
 }
 
-function isOwnError(e: ErrorEvent, allowed: ReadonlySet<string>): boolean {
+export function isOwnError(e: ErrorEvent, allowed: ReadonlySet<string>): boolean {
   if (e.filename === '') {
     return false;
   }

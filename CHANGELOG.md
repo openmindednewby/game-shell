@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+- `installCrashTelemetry(opts?)` (GAME-TELEMETRY-1 "Shared crash telemetry for games"): sends own-origin `error` events and every `unhandledrejection` to Umami as one `crash` event (`kind`, `message`, `source`, `ref`, `version`), each distinct `kind:message` once per page, at most `maxEvents` (default 5) per page, text cut to `maxText` (default 200). Reads `window.umami` at send time, so a tracker that is missing, late or throwing never breaks the game. `listen: false` skips the listeners and only returns `report(info)`, which plugs into `initGameShell({ crash: { report } })` so the overlay shows the same ref. Replaces the hand-written reporters in Surge `src/shell.ts:20` and SpeedX3D `src/game-shell.ts:40`.
+
 ## 0.6.0
 
 - `?fps=1` frame meter (GAME-FEEL-1 "Make games feel well made"). `mountFpsMeter({ host?, search?, now? })` mounts an `FpsMeter` only when the query has `fps=1` (else `null`); `fpsEnabled(search?)`. `meter.push({ frameMs, simMs?, renderMs?, cpuMs? }, load?)` once per frame: fps from the median frame time, p50/p95 over the last 288 frames, mean sim/render/other when `cpuMs` is given, draws/tris/canvas size when `load` is given; repaints every 250 ms. `.gs-fps` sits top-left inside the safe area, pointer-events none. Ported from Surge `src/fpsMeter.ts`.

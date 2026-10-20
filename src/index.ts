@@ -10,6 +10,8 @@ export { startCrash } from './crash/crash';
 export type { CrashOptions } from './crash/crash';
 export { CRASH_KIND } from './crash/crashKind';
 export type { CrashInfo, CrashKind } from './crash/crashKind';
+export { installCrashTelemetry, DEFAULT_CRASH_EVENT, DEFAULT_MAX_CRASH_EVENTS, DEFAULT_MAX_CRASH_TEXT } from './telemetry/crashTelemetry';
+export type { CrashTelemetry, CrashTelemetryOptions, CrashTelemetryWindow, UmamiTracker } from './telemetry/crashTelemetry';
 export { startLifecycle, unlockAudio, prefersReducedMotion } from './lifecycle/lifecycle';
 export type { LifecycleOptions, ResumableAudio } from './lifecycle/lifecycle';
 export { startVersionPoll } from './version/versionPoll';

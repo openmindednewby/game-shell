@@ -82,6 +82,17 @@ mountOfflineButton({
 
 The service worker must answer these requests from Cache Storage (`caches.match` searches every cache) and must not bypass it for them (for example a network-only fetch with `cache: 'no-cache'`), or the cached copies are never served offline. The QR uses `--gs-qr-ink` / `--gs-qr-paper` (default black on white; keep a dark-on-light pair so phone cameras read it).
 
+## Crash telemetry
+
+```ts
+import { initGameShell, installCrashTelemetry } from '@dloizides/game-shell';
+
+const telemetry = installCrashTelemetry({ listen: false, appVersion });
+initGameShell({ root, labels, crash: { report: telemetry.report } });
+```
+
+One Umami `crash` event per distinct error (`kind`, `message`, `source`, `ref`, `version`), capped at 5 per page; foreign-origin script errors are ignored. Without the shell, call `installCrashTelemetry()` and it listens to `error` and `unhandledrejection` itself. Options: `event`, `maxEvents`, `maxText`, `origins`, `win`, `now`.
+
 ## FPS meter (`?fps=1`)
 
 ```ts

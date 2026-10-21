@@ -64,6 +64,7 @@ const SHARE = `.gs-share{position:fixed;inset:0;z-index:2147483001;background:va
 
 const OFFLINE = `.gs-offline .gs-btn{position:relative;overflow:hidden;width:100%}
 .gs-offline .gs-btn:disabled{cursor:default}
+.gs-offline .gs-offline-label{line-height:1.25}
 .gs-offline[data-state=done] .gs-btn{color:var(--gs-ink-dim)}
 .gs-offline .gs-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--gs-edge)}
 .gs-offline[data-state=idle] .gs-bar,.gs-offline[data-state=done] .gs-bar,.gs-offline[data-state=failed] .gs-bar{display:none}

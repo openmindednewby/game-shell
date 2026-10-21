@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- Controller indicator (GAME-PAD-1 "Show when a controller is connected"). `startPadToasts(opts?)` shows a polite toast `Controller connected: <name>` / `Controller disconnected: <name>` (`P<n> controller ...` with 2+ pads), sliding in unless reduced motion. `mountPadBadge(opts?)` mounts a small pad badge in a given parent or fixed bottom-left, hidden with no pad, `P1` `P2` slots with 2+. Built on `watchGamepads` (window gamepad events + `navigator.getGamepads()` snapshot) and `shortPadName`; `PAD_CHANGE`, `DEFAULT_PAD_LABELS`, `padToastText`, `padBadgeText` exported. New icon `gamepad`, classes `.gs-pad`, `.gs-pad-slot`, `.gs-sr`, `.gs-toast-slide`. Internal `mountToast` now backs `showToast` (unchanged API).
+
 ## 0.7.0
 
 - `installCrashTelemetry(opts?)` (GAME-TELEMETRY-1 "Shared crash telemetry for games"): sends own-origin `error` events and every `unhandledrejection` to Umami as one `crash` event (`kind`, `message`, `source`, `ref`, `version`), each distinct `kind:message` once per page, at most `maxEvents` (default 5) per page, text cut to `maxText` (default 200). Reads `window.umami` at send time, so a tracker that is missing, late or throwing never breaks the game. `listen: false` skips the listeners and only returns `report(info)`, which plugs into `initGameShell({ crash: { report } })` so the overlay shows the same ref. Replaces the hand-written reporters in Surge `src/shell.ts:20` and SpeedX3D `src/game-shell.ts:40`.

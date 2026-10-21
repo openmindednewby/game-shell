@@ -107,6 +107,24 @@ meter?.push({ frameMs, simMs, renderMs, cpuMs }, { draws, tris, w, h });   // on
 | `mountFpsMeter(opts?)` · `fpsEnabled(search?)` | Mounts a `pre.gs-fps` (`data-testid=fps-meter`) on `host` (default `document.body`) only with `fps=1`. |
 | `FpsMeter` | `push` records a frame; every 250 ms it paints fps (from p50), frame ms p50/p95 over the last 288 frames, then sim/render/other ms when `cpuMs` is passed and draws/tris/size when `load` is passed. `last` holds the numbers; `remove()` takes it off. |
 
+## Controller indicator (GAME-PAD-1 "Show when a controller is connected")
+
+```ts
+import { mountPadBadge, startPadToasts } from '@dloizides/game-shell';
+
+startPadToasts();                              // "Controller connected: Xbox" / "...disconnected..." toast
+mountPadBadge({ parent: hudCorner });          // pad icon; "P1 P2" once 2+ pads; hidden with none
+```
+
+| Export | What it does |
+|---|---|
+| `startPadToasts(opts?)` | Listens to `gamepadconnected` / `gamepaddisconnected` and shows one `role=status`, `aria-live=polite` toast per change (a new one replaces the last). Slides in (`.gs-toast-slide`) unless `prefers-reduced-motion` or `?reducedMotion=1`. With 2+ pads the text carries the player: `P2 controller connected: DualSense`. |
+| `mountPadBadge(opts?)` | A `.gs-pad` badge (`data-testid=pad-badge`, `data-count`) in `parent`, or fixed bottom-left inside the safe area when omitted. Icon only for one pad, `P1` `P2` slots for 2+; screen readers hear the pad name or the count. `pointer-events:none`, never a tap target. |
+| `watchGamepads({ onChange })` | The tracker both use: `PAD_CHANGE.Initial` (pads already exposed by `navigator.getGamepads()`), `Connected`, `Disconnected`, each with the `pads` list; P1 is the lowest pad index. |
+| `shortPadName(id)` | `Xbox`, `DualSense`, `DualShock`, `Switch Pro`, `8BitDo`, `Stadia`, else the text before the vendor block cut to 24 chars. |
+
+Labels: pass `labels` (any of `DEFAULT_PAD_LABELS`: `connected`, `disconnected`, `playerConnected`, `playerDisconnected`, `badgeOne`, `badgeMany`, `player`; tokens `{name}`, `{slot}`, `{count}`). The badge reads `--gs-surface`, `--gs-edge`, `--gs-accent` (icon), `--gs-ink` (slots), `--gs-radius-pill`.
+
 ## Theme
 
 Every overlay reads only these CSS variables; defaults are a neutral dark theme. Set them on `:root` in the game:

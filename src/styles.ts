@@ -71,7 +71,17 @@ const OFFLINE = `.gs-offline .gs-btn{position:relative;overflow:hidden;width:100
 
 const FPS = `.gs-fps{position:fixed;z-index:2147483003;top:calc(8px + var(--gs-safe-top));left:calc(8px + var(--gs-safe-left));margin:0;padding:6px 8px;border-radius:6px;background:var(--gs-surface);font:12px/1.35 ui-monospace,monospace;white-space:pre;pointer-events:none}`;
 
-export const GAME_SHELL_CSS = [THEME, ROOT, BASE, INSTALL, CRASH, SHARE, OFFLINE, FPS].join('\n');
+const PAD = `.gs-toast-slide{animation:gs-toast-in .22s ease-out}
+@keyframes gs-toast-in{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.gs-toast-slide{animation:none}}
+.gs-pad{position:relative;display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:4px 8px;border-radius:var(--gs-radius-pill);background:var(--gs-surface);border:1px solid var(--gs-edge);color:var(--gs-accent);font:700 13px/1 var(--gs-font-text);pointer-events:none}
+.gs-pad[hidden]{display:none}
+.gs-pad[data-fixed]{position:fixed;z-index:2147483000;left:calc(12px + var(--gs-safe-left));bottom:calc(12px + var(--gs-safe-bottom))}
+.gs .gs-pad svg{width:18px;height:18px}
+.gs-pad-slot{color:var(--gs-ink)}
+.gs-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}`;
+
+export const GAME_SHELL_CSS = [THEME, ROOT, BASE, INSTALL, CRASH, SHARE, OFFLINE, FPS, PAD].join('\n');
 
 export function injectStyles(doc: Document = document): void {
   if (doc.getElementById(STYLE_ID)) {

@@ -8,5 +8,6 @@ export const ICONS = {
   share: svg('<path d="M12 15V4M8 8l4-4 4 4M6 12v8h12v-8"/>'),
   link: svg('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'),
   check: svg('<path d="M5 12l5 5 9-10"/>'),
+  gamepad: svg('<rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 10.5v4M5 12.5h4M15.5 11.5h.01M18 13.5h.01"/>'),
   reload: svg('<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/>'),
 } as const;
